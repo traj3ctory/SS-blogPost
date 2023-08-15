@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+div.hello{
+    color: #415c58;
+    background-color: #303030;
+}
