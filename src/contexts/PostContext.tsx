@@ -23,11 +23,13 @@ interface PostDataContextProps {
   loading: boolean;
   posts: Post[];
   paginatedPosts: Post[];
+  filteredPosts: Post[];
   post: Post | null;
   setShowToast: (showToast: boolean) => void;
   addPost: (post: Post | null) => void;
   setLoading: (loading: boolean) => void;
   loadMorePosts: (count: number) => void;
+  searchPosts: (searchTerm: string) => void;
 }
 
 const PostDataContext = createContext<PostDataContextProps | undefined>(
@@ -47,10 +49,15 @@ export const usePostDataContext = () => {
 const PostDataProvider = ({ children }: IProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [paginatedPosts, setPaginatedPosts] = useState<Post[]>([]);
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [post, setPost] = useState<Post | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
 
+  /**
+   * @function loadMorePosts
+   * @description Load more posts
+   */
   const loadMorePosts = (count: number) => {
     if (loading) {
       return;
@@ -59,6 +66,31 @@ const PostDataProvider = ({ children }: IProps) => {
     setLoading(true);
     const postsToLoad = posts.slice(count * 10, (count + 1) * 10);
     setPaginatedPosts((prevPosts) => [...prevPosts, ...postsToLoad]);
+    setLoading(false);
+  };
+
+  /**
+   * @function searchPosts
+   * @description Search posts
+   */
+  const searchPosts = (searchTerm: string) => {
+    if (loading) {
+      return;
+    }
+
+    setLoading(true);
+    if (searchTerm.length === 0) {
+      // If search term is empty, restore original posts
+      setFilteredPosts([]);
+      setLoading(false);
+      return;
+    }
+
+    const filteredPosts = posts.filter((el) =>
+      el.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    console.log({filteredPosts})
+    setFilteredPosts(filteredPosts);
     setLoading(false);
   };
 
@@ -94,10 +126,12 @@ const PostDataProvider = ({ children }: IProps) => {
         post,
         paginatedPosts,
         posts,
+        filteredPosts,
         addPost,
         setLoading,
         setShowToast,
         loadMorePosts,
+        searchPosts,
       }}
     >
       {children}

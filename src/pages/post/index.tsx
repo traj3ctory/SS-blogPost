@@ -11,7 +11,7 @@ interface IProps {}
  **/
 
 const PostList = ({}: IProps) => {
-  const { posts, paginatedPosts, loading, loadMorePosts } =
+  const { filteredPosts, posts, paginatedPosts, loading, loadMorePosts } =
     usePostDataContext();
   let count = 0;
 
@@ -53,6 +53,8 @@ const PostList = ({}: IProps) => {
     };
   }, [loading]);
 
+  const dataStore = filteredPosts?.length > 0 ? filteredPosts : paginatedPosts;
+
   return (
     <Layout>
       <>
@@ -82,7 +84,7 @@ const PostList = ({}: IProps) => {
         ) : (
           <>
             <ul>
-              {paginatedPosts.map((post, i) => (
+              {dataStore.map((post, i) => (
                 <li key={i}>
                   <PostListCard post={post} />
                 </li>
@@ -92,12 +94,12 @@ const PostList = ({}: IProps) => {
 
             <div className="flex justify-between">
               <p className="text-lg">
-                {paginatedPosts.length > 0
-                  ? `Showing ${paginatedPosts.length} of ${posts.length} posts`
+                {dataStore.length > 0
+                  ? `Showing ${dataStore.length} of ${posts.length} posts`
                   : "No Posts"}
               </p>
               <p className="text-lg">
-                {paginatedPosts.length === posts.length
+                {dataStore.length === posts.length
                   ? "No more posts"
                   : "Loading..."}
               </p>
