@@ -4,6 +4,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import NotFound from "@/components/not-found";
 import Post from "@/pages/post";
+import PostDetail from "@/pages/post/Detail";
 
 const routes = [
   {
@@ -11,12 +12,20 @@ const routes = [
     element: <Post />,
   },
   {
+    path: "/posts",
+    element: <Post />,
+  },
+  {
+    path: "post/:id",
+    element: <PostDetail />,
+  },
+  {
     path: "*",
     element: <NotFound />,
   },
 ];
 
-function App() {
+const App = () => {
   return (
     <Router>
       <Routes>

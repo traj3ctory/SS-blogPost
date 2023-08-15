@@ -1,5 +1,5 @@
 import Layout from "@/components/layout";
-import PostCard from "@/components/post-card";
+import PostListCard from "@/components/post-list";
 import { usePostDataContext } from "@/contexts/PostContext";
 import { useEffect, useRef } from "react";
 
@@ -7,11 +7,14 @@ interface IProps {}
 
 /**
  * @author traj3ctory
- * @function @Home
+ * @function @PostList
  **/
 
-export default ({}: IProps) => {
-  const { posts, loading, setLoading, loadMorePosts } = usePostDataContext();
+const PostList = ({}: IProps) => {
+  const { posts, paginatedPosts, loading, loadMorePosts } =
+    usePostDataContext();
+  let count = 0;
+
   // const [currentPage, setCurrentPage] = useState(1);
   // const postsPerPage = 10; // Change this to the desired number of posts per page
 
@@ -25,19 +28,21 @@ export default ({}: IProps) => {
   //   setCurrentPage(pageNumber);
   // };
 
-  const sentinelRef = useRef(null);
+  const sentinelRef = useRef<any>(null);
 
   const handleScroll = () => {
     if (
-      !(window.innerHeight + window.scrollY >= document.body.offsetHeight &&
-    !loading)
+      !(
+        sentinelRef.current &&
+        sentinelRef.current.getBoundingClientRect().bottom <=
+          window.innerHeight + 100 &&
+        !loading
+      )
     ) {
       return;
     }
-    console.log("load more posts")
-    setLoading(true);
-    loadMorePosts();
-    setLoading(false);
+    count++;
+    loadMorePosts(count);
   };
 
   useEffect(() => {
@@ -46,31 +51,57 @@ export default ({}: IProps) => {
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
+  }, [loading]);
 
   return (
     <Layout>
-      <div>
+      <>
+        <div className="text-center mb-6">
+          <h3 className="text-2xl">Blog Post</h3>
+          {loading ? (
+            <small>Loading ...</small>
+          ) : (
+            <small>
+              {posts.length > 0 ? `Total Posts: ${posts.length}` : "No Posts"}
+            </small>
+          )}
+        </div>
         {loading ? (
-          // <div className="animate-pulse space-y-4">
-          //   {[1, 2, 3, 4, 5].map((index) => (
-          //     <div key={index} className="bg-slate-200 rounded h-10 w-4/5" />
-          //   ))}
-          // </div>
-          <div className="animate-pulse space-y-4" ref={sentinelRef} style={{ height: '20px' }}>
-            <div className="bg-gray-300 h-5 w-4/5" />
-            <div className="bg-gray-300 h-5 w-1/2" />
-          </div>
+          [1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="animate-pulse space-y-4 shadow-lg rounded-lg p-2 mb-10"
+            >
+              <div className="bg-slate-200 h-[1.5rem] w-1/2" />
+              <div className="bg-slate-200 h-[1rem] w-5/5" />
+              <div className="bg-slate-200 h-[1rem] w-5/5" />
+              <div className="bg-slate-200 h-[1rem] w-4/5" />
+              <div className="bg-slate-200 h-[1rem] w-3/5" />
+            </div>
+          ))
         ) : (
           <>
-            <h1>Post List</h1>
             <ul>
-              {posts.map((post, i) => (
+              {paginatedPosts.map((post, i) => (
                 <li key={i}>
-                  <PostCard post={post} />
+                  <PostListCard post={post} />
                 </li>
               ))}
+              <div ref={sentinelRef} style={{ height: "1px" }} />
             </ul>
+
+            <div className="flex justify-between">
+              <p className="text-lg">
+                {paginatedPosts.length > 0
+                  ? `Showing ${paginatedPosts.length} of ${posts.length} posts`
+                  : "No Posts"}
+              </p>
+              <p className="text-lg">
+                {paginatedPosts.length === posts.length
+                  ? "No more posts"
+                  : "Loading..."}
+              </p>
+            </div>
             {/* <ul>
                 {currentPosts.map((post) => (
                   <li key={post.id}>{post.title}</li>
@@ -85,7 +116,9 @@ export default ({}: IProps) => {
               </div> */}
           </>
         )}
-      </div>
+      </>
     </Layout>
   );
 };
+
+export default PostList;

@@ -15,7 +15,9 @@ export default ({ children }: IProps) => {
   return (
     <div className="relative h-full">
       <Header />
-      <main className="max-w-7xl mx-auto pt-6 mb-12 px-lg-8 px-4">{children}</main>
+      <main className="lg:max-w-7xl mx-auto pt-6 mb-12 md:px-10 px-4">
+        {children}
+      </main>
       <Footer />
     </div>
   );

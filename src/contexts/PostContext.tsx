@@ -22,11 +22,12 @@ interface Post {
 interface PostDataContextProps {
   loading: boolean;
   posts: Post[];
+  paginatedPosts: Post[];
   post: Post | null;
   setShowToast: (showToast: boolean) => void;
-  addPost: (post: Post) => void;
+  addPost: (post: Post | null) => void;
   setLoading: (loading: boolean) => void;
-  loadMorePosts: () => void;
+  loadMorePosts: (count: number) => void;
 }
 
 const PostDataContext = createContext<PostDataContextProps | undefined>(
@@ -45,48 +46,59 @@ export const usePostDataContext = () => {
 
 const PostDataProvider = ({ children }: IProps) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [paginatedPosts, setPaginatedPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [post, setPost] = useState<Post | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
-  const [chunkIndex, setChunkIndex] = useState<number>(1);
 
-  const loadMorePosts = () => {
+  const loadMorePosts = (count: number) => {
+    if (loading) {
+      return;
+    }
+
     setLoading(true);
-    // You can slice the data based on the chunk index and load more posts
-    // Update the chunk index and loading state when done
-    const nextChunkIndex = chunkIndex + 1;
-    setChunkIndex(nextChunkIndex);
+    const postsToLoad = posts.slice(count * 10, (count + 1) * 10);
+    setPaginatedPosts((prevPosts) => [...prevPosts, ...postsToLoad]);
     setLoading(false);
   };
 
-  const addPost = (post: Post) => {
-    setPosts((prevPosts) => [...prevPosts, post]);
-  };
-
-  const getPost = (id: number) => {
-    setLoading(true);
-    // PostService.getPost(API_LIST.Posts, id).then((data) => {
-    //   setPost(data);
-    //   setLoading(false);
-    // }
-    // );
+  const addPost = (post: Post | null) => {
+    setPost(post);
   };
 
   const handleCloseToast = () => {
     setShowToast(false);
   };
 
+  const getPostData = async () => {
+    try {
+      setLoading(true);
+      const data = await PostService.getPosts(API_LIST.Posts);
+      setPosts(data as Post[]);
+      setPaginatedPosts(data.slice(0, 10));
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    // You can fetch initial post data from an API here
-    setLoading(true);
-    PostService.getPosts(API_LIST.Posts)
-      .then((data) => setPosts(data))
-      .finally(() => setLoading(false));
+    getPostData();
   }, []);
 
   return (
     <PostDataContext.Provider
-      value={{ loading, post, posts: posts.slice(0, chunkIndex * 10), addPost, setLoading, setShowToast, loadMorePosts }}
+      value={{
+        loading,
+        post,
+        paginatedPosts,
+        posts,
+        addPost,
+        setLoading,
+        setShowToast,
+        loadMorePosts,
+      }}
     >
       {children}
       {showToast && (

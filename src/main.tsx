@@ -1,4 +1,4 @@
-import PostDataProvider from "@/contexts/PostContext.tsx";
+import PostDataProvider from "@/contexts/PostContext";
 // import { ToastProvider } from "@/contexts/ToastContext.tsx";
 import React from "react";
 import ReactDOM from "react-dom/client";
