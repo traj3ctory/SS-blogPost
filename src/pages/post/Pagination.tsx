@@ -11,7 +11,7 @@ interface IProps {}
  **/
 
 const PostListPagination = ({}: IProps) => {
-  const { filteredPosts, posts, loading } = usePostDataContext();
+  const { searchTerm, filteredPosts, posts, loading } = usePostDataContext();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 7; // Change this to the desired number of posts per page
@@ -75,6 +75,13 @@ const PostListPagination = ({}: IProps) => {
             </small>
           )}
         </div>
+
+        {searchTerm !== "" && filteredPosts?.length === 0 && (
+          <p className="text-xl my-3">
+            No result found for:{" "}
+            <span className="font-semibold underline">{searchTerm}</span>
+          </p>
+        )}
         {loading ? (
           [1, 2, 3].map((i) => (
             <div

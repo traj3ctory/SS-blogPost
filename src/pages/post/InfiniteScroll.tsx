@@ -12,6 +12,7 @@ interface IProps {}
 
 const PostListInfiniteScroll = ({}: IProps) => {
   const {
+    searchTerm,
     filteredPosts,
     posts,
     paginatedPosts,
@@ -68,6 +69,14 @@ const PostListInfiniteScroll = ({}: IProps) => {
             </small>
           )}
         </div>
+
+        {searchTerm !== "" && filteredPosts?.length === 0 && (
+          <p className="text-xl my-3">
+            No result found for:{" "}
+            <span className="font-semibold underline">{searchTerm}</span>
+          </p>
+        )}
+
         {loading && [1, 2, 3, 4, 5].map((i) => <Loader key={i} />)}
         {!loading && (
           <ul>

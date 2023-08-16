@@ -21,6 +21,7 @@ interface Post {
 }
 
 interface PostDataContextProps {
+  searchTerm: string;
   loading: boolean;
   loadingMore: boolean;
   posts: Post[];
@@ -56,6 +57,7 @@ const PostDataProvider = ({ children }: IProps) => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [post, setPost] = useState<Post | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>("");
   const postsPerPage = 10;
 
   const countRef = useRef<number>(1);
@@ -84,20 +86,20 @@ const PostDataProvider = ({ children }: IProps) => {
     setPaginatedPosts((prevPosts) => [...prevPosts, ...postsToLoad]);
     setLoadingMore(false);
     countRef.current += 1;
-    console.log("Loading more posts...", countRef);
   };
 
   /**
    * @function searchPosts
    * @description Search posts
    */
-  const searchPosts = (searchTerm: string) => {
+  const searchPosts = (val: string) => {
+    setSearchTerm(val);
     if (loading) {
       return;
     }
 
     setLoading(true);
-    if (searchTerm.length === 0) {
+    if (val.length === 0) {
       // If search term is empty, restore original posts
       setFilteredPosts([]);
       setLoading(false);
@@ -105,7 +107,7 @@ const PostDataProvider = ({ children }: IProps) => {
     }
 
     const filteredPosts = posts.filter((el) =>
-      el.title.toLowerCase().includes(searchTerm.toLowerCase())
+      el.title.toLowerCase().includes(val.toLowerCase())
     );
     setFilteredPosts(filteredPosts);
     setLoading(false);
@@ -139,6 +141,7 @@ const PostDataProvider = ({ children }: IProps) => {
   return (
     <PostDataContext.Provider
       value={{
+        searchTerm,
         loading,
         loadingMore,
         post,
