@@ -42,11 +42,6 @@ const PostListCard = ({ post }: IProps) => {
             ? `${post.title.substring(0, 20)}...`
             : post.title}
         </h5>
-        {/* <p className="text-gray-600">
-          {post.body.length > 20
-            ? `${post.body.substring(0, 20)}...`
-            : post.body}
-        </p> */}
       </div>
     </div>
   );

@@ -14,18 +14,18 @@ const PostList = ({}: IProps) => {
   const { postListInfiniteScroll, postListPagination } = APP_ROUTES;
 
   return (
-    <Layout search={true}>
-      <div className="flex min-h-[70vh] gap-4 justify-center items-center">
+    <Layout>
+      <div className="flex min-h-[70vh] gap-6 justify-center items-center">
         <div
           onClick={() => navigate(postListInfiniteScroll as string)}
-          className="flex-1 shadow bg-gray-100 rounded-lg p-4 flex justify-center items-center max-w-[10rem] h-[10rem] hover:bg-gray-200 cursor-pointer hover:shadow-lg text-lg font-semibold"
+          className="flex-1 shadow-md bg-slate-50 rounded-lg p-4 flex justify-center items-center max-w-[15rem] h-[10rem] hover:bg-slate-700 hover:text-white cursor-pointer hover:shadow-lg text-2xl font-semibold"
         >
-          Infinite Scroll
+          Infinite&nbsp;Scroll
         </div>
 
         <div
           onClick={() => navigate(postListPagination as string)}
-          className="flex-1 shadow bg-gray-100 rounded-lg p-4 flex justify-center items-center text-center max-w-[10rem] h-[10rem] hover:bg-gray-200 cursor-pointer hover:shadow-lg text-lg font-semibold"
+          className="flex-1 shadow-md bg-slate-50 rounded-lg p-4 flex justify-center items-center max-w-[15rem] h-[10rem] hover:bg-slate-700 hover:text-white cursor-pointer hover:shadow-lg text-2xl font-semibold"
         >
           Pagination
         </div>

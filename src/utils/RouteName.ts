@@ -3,7 +3,7 @@
 import { GenericI } from "@/types";
 
 export const APP_ROUTES: GenericI = {
-  postList: "/posts",
+  home: "/posts",
   postListInfiniteScroll: "/posts-infinite-scroll",
   postListPagination: "/posts-pagination",
   postDetail: "/post/",

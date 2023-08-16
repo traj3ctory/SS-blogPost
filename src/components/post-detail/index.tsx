@@ -1,5 +1,4 @@
 import { usePostDataContext } from "@/contexts/PostContext";
-import { APP_ROUTES } from "@/utils";
 import { useNavigate } from "react-router-dom";
 
 interface Post {
@@ -20,11 +19,9 @@ interface IProps {
 const PostDetailCard = ({ post }: IProps) => {
   const navigate = useNavigate();
   const { addPost } = usePostDataContext();
-  const { postList } = APP_ROUTES;
 
   const gotoPostList = () => {
     addPost(null);
-    // navigate(postList as string);
     navigate(-1);
   };
 

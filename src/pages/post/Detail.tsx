@@ -15,14 +15,14 @@ const PostDetail = ({}: IProps) => {
   const { post, loading, addPost } = usePostDataContext();
   const navigate = useNavigate();
 
-  const { postList } = APP_ROUTES;
+  const { home } = APP_ROUTES;
 
   const gotoPostList = () => {
     addPost(null);
-    navigate(postList as string);
+    navigate(home as string);
   };
 
-  if (post === null ){
+  if (post === null) {
     gotoPostList();
   }
   return (
