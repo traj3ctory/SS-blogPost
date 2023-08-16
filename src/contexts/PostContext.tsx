@@ -30,7 +30,7 @@ interface PostDataContextProps {
   setShowToast: (showToast: boolean) => void;
   addPost: (post: Post | null) => void;
   setLoading: (loading: boolean) => void;
-  loadMorePosts: (count: number) => void;
+  loadMorePosts: () => void;
   searchPosts: (searchTerm: string) => void;
 }
 
