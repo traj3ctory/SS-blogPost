@@ -6,6 +6,7 @@ import {
   createContext,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from "react";
 
@@ -21,6 +22,7 @@ interface Post {
 
 interface PostDataContextProps {
   loading: boolean;
+  loadingMore: boolean;
   posts: Post[];
   paginatedPosts: Post[];
   filteredPosts: Post[];
@@ -51,22 +53,38 @@ const PostDataProvider = ({ children }: IProps) => {
   const [paginatedPosts, setPaginatedPosts] = useState<Post[]>([]);
   const [filteredPosts, setFilteredPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [post, setPost] = useState<Post | null>(null);
   const [showToast, setShowToast] = useState<boolean>(false);
+  const postsPerPage = 10;
+
+  const countRef = useRef<number>(1);
 
   /**
    * @function loadMorePosts
    * @description Load more posts
    */
-  const loadMorePosts = (count: number) => {
-    if (loading) {
+
+  const loadMorePosts = async () => {
+    if (
+      loadingMore ||
+      loading ||
+      countRef.current * postsPerPage >= posts.length
+    ) {
       return;
     }
 
-    setLoading(true);
-    const postsToLoad = posts.slice(count * 10, (count + 1) * 10);
+    setLoadingMore(true);
+
+    const postsToLoad = posts.slice(
+      countRef.current * postsPerPage,
+      (countRef.current + 1) * postsPerPage
+    );
+
     setPaginatedPosts((prevPosts) => [...prevPosts, ...postsToLoad]);
-    setLoading(false);
+    setLoadingMore(false);
+    countRef.current += 1;
+    console.log("Loading more posts...", countRef);
   };
 
   /**
@@ -89,7 +107,6 @@ const PostDataProvider = ({ children }: IProps) => {
     const filteredPosts = posts.filter((el) =>
       el.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
-    console.log({filteredPosts})
     setFilteredPosts(filteredPosts);
     setLoading(false);
   };
@@ -107,7 +124,7 @@ const PostDataProvider = ({ children }: IProps) => {
       setLoading(true);
       const data = await PostService.getPosts(API_LIST.Posts);
       setPosts(data as Post[]);
-      setPaginatedPosts(data.slice(0, 10));
+      setPaginatedPosts(data.slice(0, postsPerPage));
     } catch (err) {
       console.log(err);
     } finally {
@@ -123,6 +140,7 @@ const PostDataProvider = ({ children }: IProps) => {
     <PostDataContext.Provider
       value={{
         loading,
+        loadingMore,
         post,
         paginatedPosts,
         posts,

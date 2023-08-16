@@ -4,7 +4,9 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 
 import NotFound from "@/components/not-found";
 import Post from "@/pages/post";
+import PostInfiniteScroll from "@/pages/post/InfiniteScroll";
 import PostDetail from "@/pages/post/Detail";
+import PostPagination from "@/pages/post/Pagination";
 
 const routes = [
   {
@@ -14,6 +16,14 @@ const routes = [
   {
     path: "/posts",
     element: <Post />,
+  },
+  {
+    path: "/posts-infinite-scroll",
+    element: <PostInfiniteScroll />,
+  },
+  {
+    path: "/posts-pagination",
+    element: <PostPagination />,
   },
   {
     path: "post/:id",

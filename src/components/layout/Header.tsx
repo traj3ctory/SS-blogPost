@@ -1,21 +1,30 @@
 import { SendsprintLogo } from "@/assets/icons";
 import { usePostDataContext } from "@/contexts/PostContext";
+import { APP_ROUTES } from "@/utils";
+import { useNavigate } from "react-router-dom";
 
-interface IProps {}
+interface IProps {
+  search: boolean;
+}
 
 /**
  * @author traj3ctory
  * @function @Header
  **/
 
-export default ({}: IProps) => {
+export default ({ search = false }: IProps) => {
+  const navigate = useNavigate();
   const { searchPosts } = usePostDataContext();
-  
-  return (
-    <header className="bg-secondary text-gray h-16 sticky shadow top-0 left-0 flex items-center md:px-4 px-2">
-      <div className="flex justify-between items-center w-full h-full">
 
-        <div className="flex justify-between items-center">
+  const { postList } = APP_ROUTES;
+
+  return (
+    <header className="bg-secondary text-gray min-h-16 py-3 md:sticky shadow top-0 left-0 flex items-center md:px-4 px-2">
+      <div className="flex md:flex-row flex-col justify-between items-center w-full h-full gap-2">
+        <div
+          className="flex justify-between items-center cursor-pointer"
+          onClick={() => navigate(postList as string)}
+        >
           <div className="w-fit">
             <SendsprintLogo />
           </div>
@@ -24,16 +33,18 @@ export default ({}: IProps) => {
           </div>
         </div>
 
-        <div>
-          <input
-            type="text"
-            name="search"
-            id="search"
-            placeholder="Search Blog ..."
-            className="bg-gray-200 rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
-            onChange={(e) => searchPosts(e.target.value)}
-          />
-        </div>
+        {search && (
+          <div>
+            <input
+              type="text"
+              name="search"
+              id="search"
+              placeholder="Search Blog ..."
+              className="bg-gray-200 rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
+              onChange={(e) => searchPosts(e.target.value)}
+            />
+          </div>
+        )}
       </div>
     </header>
   );

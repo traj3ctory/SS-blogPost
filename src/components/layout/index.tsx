@@ -4,6 +4,7 @@ import Header from "./Header";
 
 interface IProps {
   children: ReactNode;
+  search?: boolean;
 }
 
 /**
@@ -11,10 +12,11 @@ interface IProps {
  * @function @Layout
  **/
 
-export default ({ children }: IProps) => {
+export default ({ children, search = false }: IProps) => {
+
   return (
     <div className="relative h-full">
-      <Header />
+      <Header search={search} />
       <main className="lg:max-w-7xl mx-auto pt-6 mb-12 md:px-10 px-4">
         {children}
       </main>
