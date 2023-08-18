@@ -14,7 +14,7 @@ interface IProps {
 
 export default ({ search = false }: IProps) => {
   const navigate = useNavigate();
-  const { searchPosts } = usePostDataContext();
+  const { searchTerm, searchPosts } = usePostDataContext();
 
   const { home } = APP_ROUTES;
 
@@ -42,6 +42,7 @@ export default ({ search = false }: IProps) => {
               placeholder="Search Blog ..."
               className="bg-gray-200 rounded-full px-4 py-2 focus:outline-none focus:ring-1 focus:ring-primary focus:border-transparent"
               onChange={(e) => searchPosts(e.target.value)}
+              value={searchTerm}
             />
           </div>
         )}

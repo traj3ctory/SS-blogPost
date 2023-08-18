@@ -19,6 +19,7 @@ const PostListInfiniteScroll = ({}: IProps) => {
     loading,
     loadingMore,
     loadMorePosts,
+    setSearchTerm,
   } = usePostDataContext();
 
   const sentinelRef = useRef<any>(null);
@@ -53,6 +54,10 @@ const PostListInfiniteScroll = ({}: IProps) => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [loading]);
+
+  useEffect(() => {
+    setSearchTerm("");
+  }, []);
 
   const dataStore = filteredPosts?.length > 0 ? filteredPosts : paginatedPosts;
 

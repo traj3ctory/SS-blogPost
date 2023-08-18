@@ -33,6 +33,7 @@ interface PostDataContextProps {
   setLoading: (loading: boolean) => void;
   loadMorePosts: () => void;
   searchPosts: (searchTerm: string) => void;
+  setSearchTerm: (searchTerm: string) => void;
 }
 
 const PostDataContext = createContext<PostDataContextProps | undefined>(
@@ -94,7 +95,7 @@ const PostDataProvider = ({ children }: IProps) => {
    */
   const searchPosts = (val: string) => {
     setSearchTerm(val);
-    if (loading) {
+    if (loading || val.length === 0) {
       return;
     }
 
@@ -153,6 +154,7 @@ const PostDataProvider = ({ children }: IProps) => {
         setShowToast,
         loadMorePosts,
         searchPosts,
+        setSearchTerm,
       }}
     >
       {children}

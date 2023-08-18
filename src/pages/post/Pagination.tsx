@@ -1,7 +1,7 @@
 import Layout from "@/components/layout";
 import PostListCard from "@/components/post-list";
 import { usePostDataContext } from "@/contexts/PostContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface IProps {}
 
@@ -11,7 +11,7 @@ interface IProps {}
  **/
 
 const PostListPagination = ({}: IProps) => {
-  const { searchTerm, filteredPosts, posts, loading } = usePostDataContext();
+  const { searchTerm, filteredPosts, posts, loading, setSearchTerm } = usePostDataContext();
 
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 7; // Change this to the desired number of posts per page
@@ -59,6 +59,10 @@ const PostListPagination = ({}: IProps) => {
 
     return pageNumbers;
   };
+
+  useEffect(() => {
+    setSearchTerm("");
+  }, []);
 
   const dataStore = filteredPosts?.length > 0 ? filteredPosts : currentPosts;
 
